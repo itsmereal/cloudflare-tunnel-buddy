@@ -1,0 +1,35 @@
+{
+  "name": "cloudflare-tunnel-buddy",
+  "version": "1.0.0",
+  "description": "Native macOS app for managing Cloudflare tunnels",
+  "type": "module",
+  "main": "src/interactive.js",
+  "scripts": {
+    "build": "node build.js && cp dist/cf-tunnel-buddy.cjs 'Cloudflare Tunnel Buddy.app/Contents/Resources/'",
+    "postbuild": "chmod +x dist/cf-tunnel-buddy.cjs"
+  },
+  "keywords": [
+    "cloudflare",
+    "tunnel",
+    "macos",
+    "app",
+    "interactive",
+    "cloudflared"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^12.0.0",
+    "@inquirer/prompts": "^5.0.0",
+    "chalk": "^5.3.0",
+    "ora": "^8.0.1",
+    "cli-table3": "^0.6.5",
+    "execa": "^9.3.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.23.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
