@@ -79,21 +79,38 @@ if [ ! -f "$CLI_SCRIPT" ]; then
     exit 1
 fi
 
-# Check if Node.js is available
-if ! command -v node >/dev/null 2>&1; then
-    osascript -e 'display dialog "Node.js is required but not installed. Please install Node.js 20+ from nodejs.org" with title "Cloudflare Tunnel Buddy" buttons {"OK"} default button "OK" with icon caution'
-    open "https://nodejs.org/"
-    exit 1
-fi
-
-# Create a more robust terminal script
+# Create a terminal script that will source the user's shell environment
 TEMP_SCRIPT=$(mktemp)
 cat > "$TEMP_SCRIPT" << INNER_EOF
 #!/bin/bash
 
+# Source shell profile to get proper PATH (for Homebrew, nvm, etc.)
+if [ -f "\$HOME/.zshrc" ]; then
+    source "\$HOME/.zshrc" 2>/dev/null
+elif [ -f "\$HOME/.bashrc" ]; then
+    source "\$HOME/.bashrc" 2>/dev/null
+elif [ -f "\$HOME/.bash_profile" ]; then
+    source "\$HOME/.bash_profile" 2>/dev/null
+fi
+
+# Also add common Node.js locations to PATH
+export PATH="/usr/local/bin:/opt/homebrew/bin:\$HOME/.nvm/versions/node/*/bin:\$PATH"
+
 # Set terminal title and clear screen
 echo -ne "\033]0;Cloudflare Tunnel Buddy\007"
 clear
+
+# Check if Node.js is available
+if ! command -v node >/dev/null 2>&1; then
+    echo "❌ Node.js is required but not installed."
+    echo ""
+    echo "Please install Node.js 20+ from https://nodejs.org/"
+    echo "Or via Homebrew: brew install node"
+    echo ""
+    echo "Press any key to exit..."
+    read -n 1 -s
+    exit 1
+fi
 
 # Show welcome message
 echo "🌟 Welcome to Cloudflare Tunnel Buddy!"
@@ -105,7 +122,7 @@ echo "   • Select 'Go back' to return to previous steps"
 echo "   • Press Ctrl+C to exit at any time"
 echo ""
 echo "Starting..."
-sleep 2
+sleep 1
 
 # Run the interactive CLI
 export NODE_NO_WARNINGS=1
@@ -118,7 +135,7 @@ else
     echo ""
 fi
 
-echo "Press any key to close this window..."
+echo "Press any key to exit..."
 read -n 1 -s
 INNER_EOF
 

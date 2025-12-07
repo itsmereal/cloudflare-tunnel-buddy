@@ -12,6 +12,7 @@ import { stopCommand } from './commands/stop.js';
 import { statusCommand } from './commands/status.js';
 import { resetCommand } from './commands/reset.js';
 import { syncCommand } from './commands/sync.js';
+import { cloudflaredStatusCommand } from './commands/cloudflared-status.js';
 import { ensureConfigDirectory } from './utils/config.js';
 
 async function waitForKey() {
@@ -73,6 +74,9 @@ async function runInteractiveMode() {
               break;
             case 'sync':
               await syncCommand();
+              break;
+            case 'cloudflared-status':
+              await cloudflaredStatusCommand();
               break;
             default:
               logger.error('Unknown command');

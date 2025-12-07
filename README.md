@@ -20,9 +20,10 @@ _Double-click to launch an interactive terminal interface for creating, managing
 - 🚀 **Interactive Setup** - Guided tunnel creation with step-by-step prompts
 - 📋 **Complete Tunnel Management** - Create, edit, remove, start, stop, and list tunnels
 - 🔄 **External Tunnel Import** - Discover and import tunnels created outside the app
-- ⚡ **Smart Controls** - Ctrl+C stops tunnels gracefully without exiting the app
+- ⚡ **Background Tunnels** - Tunnels run in background, returning you to the menu immediately
 - 🧭 **Full Navigation** - Back/cancel options throughout all dialogs
 - 📊 **Status Monitoring** - Real-time tunnel status with local and Cloudflare sync
+- 🔍 **Cloudflared Status** - Check cloudflared installation, authentication, and account info
 - 🧹 **Reset Functionality** - Clean up configuration files when needed
 - 🎨 **Beautiful Interface** - Colored terminal output with progress indicators
 
@@ -92,13 +93,21 @@ When you launch the app, you'll see an interactive menu with these options:
 ▶️ **Start a tunnel**
 
 - Select from available configured tunnels
-- Real-time connection status
-- Press Ctrl+C to stop tunnel and return to menu
+- Tunnel runs in background
+- Returns to menu immediately while tunnel stays active
 
 ⏹️ **Stop a tunnel**
 
 - Gracefully stop running tunnels
 - Returns to main menu automatically
+
+🔍 **Cloudflared status**
+
+- Check if cloudflared is installed
+- View cloudflared version
+- Check authentication status
+- View account ID and zone information
+- List all tunnels in your Cloudflare account with connection status
 
 📊 **Check tunnel status**
 

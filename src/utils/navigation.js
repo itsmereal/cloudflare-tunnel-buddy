@@ -53,8 +53,8 @@ export async function confirmWithCancel(options) {
 
 export async function showMainMenu() {
   console.clear();
-  console.log('Cloudflare Tunnel Buddy');
-  console.log('Interactive CLI for managing Cloudflare tunnels');
+  console.log(chalk.hex('#f6821e').bold('Cloudflare Tunnel Buddy'));
+  console.log(chalk.gray('Interactive CLI for managing Cloudflare tunnels'));
   console.log();
 
   const choice = await select({
@@ -68,11 +68,12 @@ export async function showMainMenu() {
       { value: 'edit', name: 'Edit a tunnel' },
       { value: 'remove', name: 'Remove a tunnel' },
       { value: 'sync', name: 'Import external tunnels' },
+      { value: 'cloudflared-status', name: 'Cloudflared status' },
       { value: 'reset', name: 'Reset configuration' },
       { value: 'exit', name: 'Exit' }
     ],
     loop: false,
-    pageSize: 11
+    pageSize: 12
   });
 
   return choice;

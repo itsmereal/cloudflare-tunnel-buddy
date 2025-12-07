@@ -76,41 +76,56 @@ export async function removeTunnel(name) {
   await removeFromConfig(name);
 }
 
-export async function startTunnel(name) {
+export async function startTunnel(name, options = {}) {
   const tunnel = await getTunnel(name);
   if (!tunnel) {
     throw new Error(`Tunnel '${name}' not found`);
   }
-  
+
   if (runningTunnels.has(name)) {
     throw new Error(`Tunnel '${name}' is already running`);
   }
-  
+
   await ensureAuthenticated();
-  
-  const subprocess = cfRunTunnel(tunnel);
-  runningTunnels.set(name, subprocess);
-  
+
+  const subprocess = cfRunTunnel(tunnel, { background: options.background });
+  const pid = subprocess.pid;
+
+  // Store tunnel info
+  runningTunnels.set(name, { subprocess, pid });
+
   // Handle process events
   subprocess.on('exit', () => {
     runningTunnels.delete(name);
   });
-  
+
   subprocess.on('error', () => {
     runningTunnels.delete(name);
   });
-  
-  return subprocess;
+
+  // For background processes, return immediately (don't await)
+  // The subprocess is already running detached
+  return { subprocess, pid };
 }
 
 export async function stopTunnel(name) {
-  const subprocess = runningTunnels.get(name);
-  if (!subprocess) {
+  const tunnelInfo = runningTunnels.get(name);
+  if (!tunnelInfo) {
     throw new Error(`Tunnel '${name}' is not running`);
   }
-  
+
   // Kill the process
-  subprocess.kill('SIGTERM');
+  const { subprocess, pid } = tunnelInfo;
+  if (subprocess && subprocess.kill) {
+    subprocess.kill('SIGTERM');
+  } else if (pid) {
+    // For background processes, kill by PID
+    try {
+      process.kill(pid, 'SIGTERM');
+    } catch (e) {
+      // Process may already be dead
+    }
+  }
   runningTunnels.delete(name);
 }
 
